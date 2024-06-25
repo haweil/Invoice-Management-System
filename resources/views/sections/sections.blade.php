@@ -1,6 +1,6 @@
 @extends('layouts.master')
 @section('title')
-    قائمة الفواتير
+    الاقسام
 @stop
 @section('css')
     <!-- Internal Data table css -->
@@ -10,32 +10,56 @@
     <link href="{{ URL::asset('assets/plugins/datatable/css/jquery.dataTables.min.css') }}" rel="stylesheet">
     <link href="{{ URL::asset('assets/plugins/datatable/css/responsive.dataTables.min.css') }}" rel="stylesheet">
     <link href="{{ URL::asset('assets/plugins/select2/css/select2.min.css') }}" rel="stylesheet">
+    <!---Internal Owl Carousel css-->
+    <link href="{{ URL::asset('assets/plugins/owl-carousel/owl.carousel.css') }}" rel="stylesheet">
+    <!---Internal  Multislider css-->
+    <link href="{{ URL::asset('assets/plugins/multislider/multislider.css') }}" rel="stylesheet">
+    <!--- Select2 css -->
+    <link href="{{ URL::asset('assets/plugins/select2/css/select2.min.css') }}" rel="stylesheet">
 @endsection
 @section('page-header')
     <!-- breadcrumb -->
     <div class="breadcrumb-header justify-content-between">
         <div class="my-auto">
             <div class="d-flex">
-                <h4 class="content-title mb-0 my-auto">الفواتير</h4><span class="text-muted mt-1 tx-13 mr-2 mb-0">/ قائمة
-                    الفواتير</span>
+                <h4 class="content-title mb-0 my-auto">الاعدادات</h4><span class="text-muted mt-1 tx-13 mr-2 mb-0">/
+                    الاقسام</span>
             </div>
         </div>
+
     </div>
     <!-- breadcrumb -->
 @endsection
 @section('content')
+
     <!-- row -->
     <div class="row">
-        <!--div-->
+        @if (session()->has('Add'))
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <strong>{{ session()->get('Add') }}</strong>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        @endif
+        @if (session()->has('Error'))
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <strong>{{ session()->get('Error') }}</strong>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        @endif
         <div class="col-xl-12">
             <div class="card mg-b-20">
                 <div class="card-header pb-0">
                     <div class="d-flex justify-content-between">
-                        <h4 class="card-title mg-b-0">Bordered Table</h4>
-                        <i class="mdi mdi-dots-horizontal text-gray"></i>
+                        <div class="col-sm-6 col-md-4 col-xl-3">
+                            <a class="modal-effect btn btn-outline-primary btn-block" data-effect="effect-slide-in-right"
+                                data-toggle="modal" href="#modaldemo1">اضافة قسم</a>
+
+                        </div>
                     </div>
-                    <p class="tx-12 tx-gray-500 mb-2">Example of Valex Bordered Table.. <a href="">Learn more</a>
-                    </p>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
@@ -43,33 +67,17 @@
                             <thead>
                                 <tr>
                                     <th class="border-bottom-0">#</th>
-                                    <th class="border-bottom-0">رقم الفاتورة</th>
-                                    <th class="border-bottom-0">تاريخ الفاتورة</th>
-                                    <th class="border-bottom-0">تاريخ الاستحقاق</th>
-                                    <th class="border-bottom-0">المنتج</th>
-                                    <th class="border-bottom-0">القسم</th>
-                                    <th class="border-bottom-0">الخصم</th>
-                                    <th class="border-bottom-0">نسبة الضريبة</th>
-                                    <th class="border-bottom-0">قيمة الضريبة</th>
-                                    <th class="border-bottom-0">الاجمالي</th>
-                                    <th class="border-bottom-0">الحالة</th>
-                                    <th class="border-bottom-0">ملاحظات</th>
+                                    <th class="border-bottom-0">اسم القسم </th>
+                                    <th class="border-bottom-0">الوصف</th>
+                                    <th class="border-bottom-0">العمليات </th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>1</td>
+                                    <td></td>
                                     <td>2324242</td>
                                     <td>23-6-2023</td>
                                     <td>23-9-2023</td>
-                                    <td>cc</td>
-                                    <td>البنك الاهلي</td>
-                                    <td>1000</td>
-                                    <td>10%</td>
-                                    <td>2500</td>
-                                    <td>2650</td>
-                                    <td>غير مدفوعه</td>
-                                    <td>لم يتم السداد الي الان </td>
                                 </tr>
                             </tbody>
                         </table>
@@ -77,7 +85,33 @@
                 </div>
             </div>
         </div>
-        <!--/div-->
+    </div>
+    <div class="modal" id="modaldemo1">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content modal-content-demo">
+                <div class="modal-header">
+                    <h6 class="modal-title">اضافة قسم </h6><button aria-label="Close" class="close" data-dismiss="modal"
+                        type="button"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <form action="{{ route('sections.store') }}" method="post">
+                    @csrf
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">اسم القسم</label>
+                            <input type="text" class="form-control" id="section_name" name="section_name">
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleFormControlTextarea1">ملاحظات</label>
+                            <textarea class="form-control" id="description" name="description" rows="3"></textarea>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-success">تاكيد</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">اغلاق</button>
+                        </div>
+                </form>
+            </div>
+        </div>
     </div>
     </div>
     <!-- row closed -->
@@ -86,6 +120,7 @@
     </div>
     <!-- main-content closed -->
 @endsection
+
 @section('js')
     <!-- Internal Data tables -->
     <script src="{{ URL::asset('assets/plugins/datatable/js/jquery.dataTables.min.js') }}"></script>
@@ -106,4 +141,5 @@
     <script src="{{ URL::asset('assets/plugins/datatable/js/responsive.bootstrap4.min.js') }}"></script>
     <!--Internal  Datatable js -->
     <script src="{{ URL::asset('assets/js/table-data.js') }}"></script>
+    <script src="{{ URL::asset('assets/js/modal.js') }}"></script>
 @endsection
