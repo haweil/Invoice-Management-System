@@ -13,7 +13,8 @@ class SectionsController extends Controller
      */
     public function index()
     {
-        return view ('sections.sections');
+        $sections=sections::all();
+        return view ('sections.sections',compact('sections'));
     }
 
 
@@ -25,23 +26,18 @@ class SectionsController extends Controller
 
     public function store(Request $request)
     {
-        $input = $request->all();
-        $b_exists = sections::where('section_name', '=', $input['section_name'])->exists();
-        if ($b_exists) {
-            session()->flash ('Error', 'هذا القسم موجود بالفعل');
-            return view ('sections.sections');
-        }
-        else
-        {
+
             $sectionAttributes = $request->validate([
                 'section_name' => 'required|unique:sections|max:255',
                 'description' => 'required',
+            ],[
+                'section_name.unique' => 'هذا القسم مسجل مسبقا',
+                'section_name.required' => 'يجب ادخال اسم القسم',
+                'description.required' => 'يجب ادخال الوصف',
             ]);
             $sectionAttributes['Created_by'] = Auth::user()->name;
             sections::create($sectionAttributes);
-        }
-        session()->flash('Add', 'تم اضافة القسم بنجاح');
-        return view ('sections.sections');
+             return redirect()->back()->with(['Add' => 'تم اضافة القسم بنجاح ']);
     }
 
     /**
@@ -57,22 +53,38 @@ class SectionsController extends Controller
      */
     public function edit(sections $sections)
     {
-        //
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, sections $sections)
+    public function update(Request $request)
     {
-        //
+        $id =$request->id;
+        $sectionAttributes = $request->validate([
+            'section_name' => 'required|unique:sections,section_name,' . $id,
+            'description' => 'required',
+        ],[
+            'section_name.unique' => 'هذا القسم مسجل مسبقا',
+            'section_name.required' => 'يجب ادخال اسم القسم',
+            'description.required' => 'يجب ادخال الوصف',
+        ]);
+
+        $section=sections::findOrFail($id);
+        $sectionAttributes['Created_by'] = Auth::user()->name;
+        $section->update($sectionAttributes);
+        return redirect()->back()->with(['Update' => 'تم تعديل القسم بنجاح ']);
+
+
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(sections $sections)
+    public function destroy(Request $request)
     {
-        //
+        $section =sections::findOrFail($request->id)->delete();
+        return redirect()->back()->with(['Delete' => 'تم حذف القسم بنجاح ']);
+
     }
 }
