@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\InvoicesController;
+use App\Http\Controllers\ProductsController;
 use App\Http\Controllers\SectionsController;
 require __DIR__.'/auth.php';
 
@@ -21,4 +22,5 @@ Route::middleware('auth')->group(function () {
 });
 Route::resource('invoices', InvoicesController::class);
 Route::resource('sections',SectionsController::class);
+Route::resource('products',ProductsController::class);
 Route::get('/{page}', [AdminController::class, 'index']);
