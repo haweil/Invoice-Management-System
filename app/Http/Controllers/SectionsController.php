@@ -63,11 +63,10 @@ class SectionsController extends Controller
         $id =$request->id;
         $sectionAttributes = $request->validate([
             'section_name' => 'required|unique:sections,section_name,' . $id,
-            'description' => 'required',
+            'description' => 'nullable',
         ],[
             'section_name.unique' => 'هذا القسم مسجل مسبقا',
             'section_name.required' => 'يجب ادخال اسم القسم',
-            'description.required' => 'يجب ادخال الوصف',
         ]);
 
         $section=sections::findOrFail($id);

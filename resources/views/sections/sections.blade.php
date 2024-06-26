@@ -102,15 +102,16 @@
                                         <td>{{ $section->section_name }}</td>
                                         <td>{{ $section->description }}</td>
                                         <td>
-                                            <a class="modal-effect btn btn-sm btn-info" data-effect="effect-scale"
-                                                data-id="{{ $section->id }}"
+                                            <button class="btn btn-outline-success btn-sm"
                                                 data-section_name="{{ $section->section_name }}"
-                                                data-description="{{ $section->description }}" data-toggle="modal"
-                                                href="#exampleModal2" title="تعديل"><i class="las la-pen"></i></a>
-                                            <a class="modal-effect btn btn-sm btn-danger" data-effect="effect-scale"
                                                 data-id="{{ $section->id }}"
+                                                data-description="{{ $section->description }}" data-toggle="modal"
+                                                data-target="#exampleModal2">تعديل</button>
+
+                                            <button class="btn btn-outline-danger btn-sm " data-id="{{ $section->id }}"
                                                 data-section_name="{{ $section->section_name }}" data-toggle="modal"
-                                                href="#modaldemo9" title="حذف"><i class="las la-trash"></i></a>
+                                                data-target="#modaldemo9">حذف</button>
+                                        </td>
                                         </td>
                                     </tr>
                                 @endforeach

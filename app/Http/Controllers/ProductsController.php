@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\products;
 use App\Models\sections;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class ProductsController extends Controller
 {
@@ -26,47 +27,62 @@ class ProductsController extends Controller
     public function store(Request $request)
     {
         $productAttributes = $request->validate([
-            'Product_name' => 'required',
+            'Product_name' => [
+                'required',
+                Rule::unique('products')->where(function ($query) use ($request) {
+                    return $query->where('section_id', $request->section_id);
+                }),
+            ],
             'section_id' => 'required',
-            'description' => 'required',
+            'description' => 'nullable',
         ],[
+            'Product_name.unique' => 'اسم المنتج موجود مسبقا في هذا القسم',
             'Product_name.required' => 'يرجي ادخال اسم المنتج',
             'section_id.required' => 'يرجي ادخال القسم',
-            'description.required' => 'يرجي ادخال الوصف',
         ]);
+
         products::create($productAttributes);
         return redirect()->back()->with(['Add' => 'تم اضافة المنتج بنجاح ']);
     }
 
-    /**
-     * Display the specified resource.
-     */
+
     public function show(products $products)
     {
-        //
+
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(products $products)
     {
-        //
+
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, products $products)
+
+    public function update(Request $request)
     {
-        //
+        $id =$request->id;
+        $productAttributes = $request->validate([
+            'Product_name' => [
+                'required',
+                Rule::unique('products')->where(function ($query) use ($request,$id) {
+                    return $query->where('section_id', $request->section_id)->where('id', '!=', $id);
+                }),
+            ],
+            'section_id' => 'required',
+            'description' => 'nullable',
+        ],[
+            'Product_name.unique' => 'اسم المنتج موجود مسبقا في هذا القسم',
+            'Product_name.required' => 'يرجي ادخال اسم المنتج',
+            'section_id.required' => 'يرجي ادخال القسم',
+        ]);
+        $products=products::findOrFail($id)->update($productAttributes);
+        return redirect()->back()->with(['Update' => 'تم تعديل المنتج بنجاح ']);
+
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(products $products)
+    public function destroy(Request $request)
     {
-        //
+        $id = $request->id;
+        products::findOrFail($id)->delete();
+        return redirect()->back()->with(['delete' => 'تم حذف المنتج بنجاح ']);
     }
 }

@@ -99,21 +99,17 @@
                                             <td>{{ $product->section->section_name }}</td>
                                             <td>{{ $product->description }}</td>
                                             <td>
-                                                <a class="modal-effect btn btn-sm btn-info" data-effect="effect-scale"
-                                                    data-id="{{ $product->id }}"
+                                                <button class="btn btn-outline-success btn-sm"
                                                     data-product_name="{{ $product->Product_name }}"
-                                                    data-description="{{ $product->description }}"
-                                                    data-section_name="{{ $product->section->section_name }}"
-                                                    data-toggle="modal" href="#exampleModal2" title="تعديل"><i
-                                                        class="las la-pen"></i>
-                                                </a>
+                                                    data-id="{{ $product->id }}"
+                                                    data-section_id="{{ $product->section->section_name }}"
+                                                    data-description="{{ $product->description }}" data-toggle="modal"
+                                                    data-target="#exampleModal2">تعديل</button>
 
-                                                <a class="modal-effect btn btn-sm btn-danger" data-effect="effect-scale"
+                                                <button class="btn btn-outline-danger btn-sm "
                                                     data-id="{{ $product->id }}"
                                                     data-product_name="{{ $product->Product_name }}" data-toggle="modal"
-                                                    href="#modaldemo9" title="حذف"><i class="las la-trash"></i>
-                                                </a>
-
+                                                    data-target="#modaldemo9">حذف</button>
                                             </td>
                                         </tr>
                                     @endforeach
@@ -184,7 +180,6 @@
                             <label for="recipient-name" class="col-form-label">اسم المنتج:</label>
                             <input class="form-control" name="Product_name" id="Product_name" type="text">
                         </div>
-
                         <label class="my-1 mr-2" for="inlineFormCustomSelectPref">القسم</label>
                         <select name="section_id" id="section_id" class="form-control" required>
                             <option value="" selected disabled> --حدد القسم--</option>
@@ -265,13 +260,13 @@
             var id = button.data('id')
             var product_name = button.data('product_name')
             var description = button.data('description')
-            var section_name = button.data('section_name')
+            var section_id = button.data('section_id')
             var modal = $(this)
             modal.find('.modal-body #id').val(id);
             modal.find('.modal-body #Product_name').val(product_name);
             modal.find('.modal-body #description').val(description);
-            modal.find('.modal-body #section_name option').each(function() {
-                if ($(this).text() == section_name) {
+            modal.find('.modal-body #section_id option').each(function() {
+                if ($(this).text() == section_id) {
                     $(this).prop('selected', true);
                 } else {
                     $(this).prop('selected', false);
