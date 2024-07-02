@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\sections;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class invoices extends Model
 {
@@ -27,4 +28,9 @@ class invoices extends Model
         'Payment_Date',
 
     ];
+
+    public function section()
+    {
+        return $this->belongsTo(sections::class, 'section_id');
+    }
 }

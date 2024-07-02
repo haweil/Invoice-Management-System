@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\invoices_details;
+use App\Models\invoices;
 use Illuminate\Http\Request;
+use App\Models\invoices_details;
+use App\Models\invoice_attachments;
+use Illuminate\Support\Facades\Storage;
 
 class InvoicesDetailsController extends Controller
 {
@@ -33,9 +36,12 @@ class InvoicesDetailsController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(invoices_details $invoices_details)
+    public function show($id)
     {
-        //
+        $invoices = invoices::where('id',$id)->first();
+        $details = invoices_details::where('invoice_id',$id)->get();
+        $attachments = invoice_attachments::where('invoice_id',$id)->get();
+        return view ('invoices.invoices_details', compact('invoices','details','attachments'));
     }
 
     /**
@@ -73,5 +79,36 @@ class InvoicesDetailsController extends Controller
             'note' => $request->note,
             'user' => auth()->user()->name,
         ]);
+    }
+
+    public function Open_file($invoices_number , $file_name)
+    {
+        $path = "Attachments/$invoices_number/$file_name";
+        if (Storage::disk('public')->exists($path)) {
+            $fullPath = storage_path('app/public/' . $path);
+            if (file_exists($fullPath)) {
+
+                return response()->file($fullPath);
+            }
+        }
+
+    }
+    public function download_file($invoiceNumber, $fileName)
+    {
+        $files = invoice_attachments::where('invoice_id', $invoiceNumber)->where('file_name', $fileName)->first();
+        $path = public_path() . '/Attachments/' . $invoiceNumber . '/' . $fileName;
+        return response()->download($path);
+    }
+
+    public function Delete_file(Request $request)
+    {
+        $id = $request->id_file;
+        $invoices_number = $request->invoice_number;
+        $file_name = $request->file_name;
+
+        $attachments = invoice_attachments::findOrFail($id);
+        $attachments->delete();
+        Storage::disk('public_uploads')->delete( $invoices_number . '/' . $file_name);
+        return redirect()->back()->with(['Success' => 'تم حذف المرفق بنجاح']);
     }
 }

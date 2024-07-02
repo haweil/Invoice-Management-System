@@ -53,20 +53,40 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>1</td>
-                                    <td>2324242</td>
-                                    <td>23-6-2023</td>
-                                    <td>23-9-2023</td>
-                                    <td>cc</td>
-                                    <td>البنك الاهلي</td>
-                                    <td>1000</td>
-                                    <td>10%</td>
-                                    <td>2500</td>
-                                    <td>2650</td>
-                                    <td>غير مدفوعه</td>
-                                    <td>لم يتم السداد الي الان </td>
-                                </tr>
+                                @php
+                                    $i = 0;
+                                @endphp
+                                @foreach ($invoices as $inovice)
+                                    @php
+                                        $i++;
+                                    @endphp
+                                    <tr>
+                                        <td>{{ $i }}</td>
+                                        <td>{{ $inovice->invoice_number }}</td>
+                                        <td>{{ $inovice->invoice_Date }}</td>
+                                        <td>{{ $inovice->Due_date }}</td>
+                                        <td>{{ $inovice->product }}</td>
+                                        <td>
+                                            <a href="{{ route('InvoicesDetails', $inovice->id) }}">
+                                                {{ $inovice->section->section_name }}
+                                            </a>
+                                        </td>
+                                        <td>{{ $inovice->Discount }}</td>
+                                        <td>{{ $inovice->Rate_VAT }}</td>
+                                        <td>{{ $inovice->Value_VAT }}</td>
+                                        <td>{{ $inovice->Total }}</td>
+                                        <td>
+                                            @if ($inovice->Value_Status == 1)
+                                                <span class="text-success">{{ $inovice->Status }}</span>
+                                            @elseif ($inovice->Value_Status == 2)
+                                                <span class="text-danger">{{ $inovice->Status }}</span>
+                                            @else
+                                                <span class="text-warning">{{ $inovice->Status }}</span>
+                                            @endif
+                                        </td>
+                                        <td>{{ $inovice->note }}</td>
+                                    </tr>
+                                @endforeach
                             </tbody>
                         </table>
                     </div>
