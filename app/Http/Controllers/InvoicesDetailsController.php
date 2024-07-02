@@ -7,9 +7,8 @@ use Illuminate\Http\Request;
 
 class InvoicesDetailsController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+
+
     public function index()
     {
         //
@@ -61,5 +60,18 @@ class InvoicesDetailsController extends Controller
     public function destroy(invoices_details $invoices_details)
     {
         //
+    }
+    public function createInvoiceDetails($invoiceId, Request $request)
+    {
+        invoices_details::create([
+            'invoice_id' => $invoiceId,
+            'invoice_number' => $request->invoice_number,
+            'product' => $request->product,
+            'Section' => $request->section_id,
+            'Status' => 'غير مدفوعة',
+            'Value_Status' => 2,
+            'note' => $request->note,
+            'user' => auth()->user()->name,
+        ]);
     }
 }

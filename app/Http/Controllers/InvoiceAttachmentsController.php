@@ -2,14 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\invoice_attachments;
 use Illuminate\Http\Request;
+use App\Models\invoice_attachments;
+use Illuminate\Support\Facades\Auth;
 
 class InvoiceAttachmentsController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
+
+
     public function index()
     {
         //
@@ -61,5 +64,24 @@ class InvoiceAttachmentsController extends Controller
     public function destroy(invoice_attachments $invoice_attachments)
     {
         //
+    }
+    public function handleFileUpload(Request $request, $invoice)
+    {
+        if ($request->hasFile('pic')) {
+            $image = $request->file('pic');
+            $file_name = $image->getClientOriginalName();
+            $invoice_number=$request->invoice_number;
+
+            $attachments = new invoice_attachments();
+            $attachments->file_name =$file_name;
+            $attachments->invoice_id=$invoice->id;
+            $attachments->Created_by=Auth::user()->name;
+            $attachments->invoice_number=$invoice_number;
+            $attachments->save();
+
+            // move pic
+            $imageName =$request->pic->getClientOriginalName();
+            $request->pic->move(public_path('Attachments/'.$invoice_number),$imageName);
+        }
     }
 }

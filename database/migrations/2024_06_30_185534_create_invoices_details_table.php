@@ -9,17 +9,18 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
+    public function up()
     {
         Schema::create('invoices_details', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('invoice_id');
-            $table->string('invoice_number',50);
-            $table->foreign('invoice_id')->references('id')->on('invoices')->onDelete('cascade');
-            $table->string('product');
-            $table->string('Section');
-            $table->string('Status');
+            $table->unsignedBigInteger('Invoice_id');
+            $table->string('invoice_number', 50);
+            $table->foreign('Invoice_id')->references('id')->on('invoices')->onDelete('cascade');
+            $table->string('product', 50);
+            $table->string('Section', 999);
+            $table->string('Status', 50);
             $table->integer('Value_Status');
+            $table->date('Payment_Date')->nullable();
             $table->text('note')->nullable();
             $table->string('user',300);
             $table->timestamps();
