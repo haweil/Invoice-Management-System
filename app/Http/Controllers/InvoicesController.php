@@ -9,6 +9,7 @@ use App\Models\invoices_details;
 use Illuminate\Support\Facades\DB;
 use App\Models\invoice_attachments;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\InvoicesDetailsController;
 use App\Http\Controllers\InvoiceAttachmentsController;
 
@@ -91,7 +92,15 @@ class InvoicesController extends Controller
     {
         $id = $request->invoice_id;
         $invoice = invoices::where('id', $id)->first();
-        $invoice->Delete();
+        $details = invoice_attachments::where('invoice_id', $id)->get();
+        foreach ($details as $detail)
+        {
+        if (!empty($detail->invoice_number))
+        {
+                Storage::disk('public_uploads')->deleteDirectory($detail->invoice_number);
+        }
+        }
+        $invoice->forcedelete();
         session()->flash('delete_invoice');
         return redirect('/invoices');
 
