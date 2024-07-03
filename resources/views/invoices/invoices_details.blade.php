@@ -24,9 +24,29 @@
     <!-- breadcrumb -->
 @endsection
 @section('content')
+
+    @if ($errors->any())
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
     @if (session()->has('Success'))
         <div class="alert alert-success alert-dismissible fade show" role="alert">
             <strong>{{ session()->get('Success') }}</strong>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    @endif
+
+    @if (session()->has('Add'))
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <strong>{{ session()->get('Add') }}</strong>
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
@@ -172,6 +192,31 @@
                                         </div>
 
                                         <div class="tab-pane" id="tab6">
+                                            <!--المرفقات-->
+                                            <div class="card card-statistics">
+                                                <div class="card-body">
+                                                    <p class="text-danger">* صيغة المرفق pdf, jpeg ,.jpg , png </p>
+                                                    <h5 class="card-title">اضافة مرفقات</h5>
+                                                    <form method="post" action="{{ url('/InvoiceAttachments') }}"
+                                                        enctype="multipart/form-data">
+                                                        @csrf
+                                                        <div class="custom-file">
+                                                            <input type="file" class="custom-file-input" id="customFile"
+                                                                name="file_name" required>
+                                                            <input type="hidden" id="customFile" name="invoice_number"
+                                                                value="{{ $invoices->invoice_number }}">
+                                                            <input type="hidden" id="invoice_id" name="invoice_id"
+                                                                value="{{ $invoices->id }}">
+                                                            <label class="custom-file-label" for="customFile">حدد
+                                                                المرفق</label>
+                                                        </div>
+                                                        <br><br>
+                                                        <button type="submit" class="btn btn-primary btn-sm "
+                                                            name="uploadedFile">تاكيد</button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                            <br>
                                             <div class="table-responsive mt-15">
                                                 <table class="table center-aligned-table mb-0 table table-hover"
                                                     style="text-align:center">
@@ -207,7 +252,8 @@
 
                                                                     <a class="btn btn-outline-info btn-sm"
                                                                         href="{{ route('Download_file', ['invoiceNumber' => $invoices->invoice_number, 'fileName' => $attachment->file_name]) }}"
-                                                                        role="button"><i class="fas fa-download"></i>&nbsp;
+                                                                        role="button"><i
+                                                                            class="fas fa-download"></i>&nbsp;
                                                                         تحميل</a>
 
                                                                     <button class="btn btn-outline-danger btn-sm"

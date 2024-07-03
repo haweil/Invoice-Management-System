@@ -10,6 +10,8 @@
     <link href="{{ URL::asset('assets/plugins/datatable/css/jquery.dataTables.min.css') }}" rel="stylesheet">
     <link href="{{ URL::asset('assets/plugins/datatable/css/responsive.dataTables.min.css') }}" rel="stylesheet">
     <link href="{{ URL::asset('assets/plugins/select2/css/select2.min.css') }}" rel="stylesheet">
+    <!--Internal   Notify -->
+    <link href="{{ URL::asset('assets/plugins/notify/css/notifIt.css') }}" rel="stylesheet" />
 @endsection
 @section('page-header')
     <!-- breadcrumb -->
@@ -24,6 +26,16 @@
     <!-- breadcrumb -->
 @endsection
 @section('content')
+    @if (session()->has('delete_invoice'))
+        <script>
+            window.onload = function() {
+                notif({
+                    msg: "تم حذف الفاتورة بنجاح",
+                    type: "success"
+                })
+            }
+        </script>
+    @endif
     <!-- row -->
     <div class="row">
         <!--div-->
@@ -50,6 +62,7 @@
                                     <th class="border-bottom-0">الاجمالي</th>
                                     <th class="border-bottom-0">الحالة</th>
                                     <th class="border-bottom-0">ملاحظات</th>
+                                    <th class="border-bottom-0">العمليات</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -85,6 +98,26 @@
                                             @endif
                                         </td>
                                         <td>{{ $inovice->note }}</td>
+                                        <td>
+                                            <div class="dropdown">
+                                                <button aria-expanded="false" aria-haspopup="true"
+                                                    class="btn ripple btn-primary" data-toggle="dropdown"
+                                                    type="button">العمليات<i class="fas fa-caret-down ml-1"></i></button>
+                                                <div class="dropdown-menu tx-13">
+
+                                                    <a class="dropdown-item"
+                                                        href="{{ route('edit_invoice', $inovice->id) }}"><i
+                                                            class="text-success fas fa-edit"></i>&nbsp;&nbsp;تعديل
+                                                        الفاتوره</a>
+
+                                                    <a class="dropdown-item" href="#"
+                                                        data-invoice_id="{{ $inovice->id }}" data-toggle="modal"
+                                                        data-target="#delete_invoice"><i
+                                                            class="text-danger fas fa-trash-alt"></i>&nbsp;&nbsp;حذف
+                                                        الفاتورة</a>
+                                                </div>
+                                            </div>
+                                        </td>
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -94,6 +127,32 @@
             </div>
         </div>
         <!--/div-->
+    </div>
+    <!-- حذف الفاتورة -->
+    <div class="modal fade" id="delete_invoice" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">حذف الفاتورة</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <form action="{{ route('invoices.destroy', 'test') }}" method="post">
+                        @method('DELETE')
+                        @csrf
+                </div>
+                <div class="modal-body">
+                    هل انت متاكد من عملية الحذف ؟
+                    <input type="hidden" name="invoice_id" id="invoice_id" value="">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">الغاء</button>
+                    <button type="submit" class="btn btn-danger">تاكيد</button>
+                </div>
+                </form>
+            </div>
+        </div>
     </div>
     </div>
     <!-- row closed -->
@@ -122,4 +181,16 @@
     <script src="{{ URL::asset('assets/plugins/datatable/js/responsive.bootstrap4.min.js') }}"></script>
     <!--Internal  Datatable js -->
     <script src="{{ URL::asset('assets/js/table-data.js') }}"></script>
+    <!--Internal  Notify js -->
+    <script src="{{ URL::asset('assets/plugins/notify/js/notifIt.js') }}"></script>
+    <script src="{{ URL::asset('assets/plugins/notify/js/notifit-custom.js') }}"></script>
+    <!--Internal   js -->
+    <script>
+        $('#delete_invoice').on('show.bs.modal', function(event) {
+            var button = $(event.relatedTarget)
+            var invoice_id = button.data('invoice_id')
+            var modal = $(this)
+            modal.find('.modal-body #invoice_id').val(invoice_id);
+        })
+    </script>
 @endsection

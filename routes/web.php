@@ -7,6 +7,7 @@ use App\Http\Controllers\InvoicesController;
 use App\Http\Controllers\ProductsController;
 use App\Http\Controllers\SectionsController;
 use App\Http\Controllers\InvoicesDetailsController;
+use App\Http\Controllers\InvoiceAttachmentsController;
 require __DIR__.'/auth.php';
 
 Route::get('/', function () {
@@ -22,11 +23,13 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 Route::resource('invoices', InvoicesController::class);
+Route::get('/section/{id}',[InvoicesController::class,'getProducts']);
 Route::resource('sections',SectionsController::class);
 Route::resource('products',ProductsController::class);
-Route::get('/section/{id}',[InvoicesController::class,'getProducts']);
+Route::get('edit_invoice/{id}', [InvoicesController::class, 'edit'])->name('edit_invoice');
 Route::get('InvoicesDetails/{id}', [InvoicesDetailsController::class, 'show'])->name('InvoicesDetails');
 Route::get('Download_file/{invoiceNumber}/{fileName}', [InvoicesDetailsController::class, 'download_file'])->name('Download_file');
 Route::get('View_file/{invoice_number}/{file_name}', [InvoicesDetailsController::class, 'Open_file'])->name('View_file');
 Route::post('Delete_file', [InvoicesDetailsController::class, 'Delete_file'])->name('Delete_file');
+Route::post('InvoiceAttachments', [InvoiceAttachmentsController::class,'store'])->name('InvoiceAttachments');
 Route::get('/{page}', [AdminController::class, 'index']);

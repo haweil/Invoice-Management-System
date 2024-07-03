@@ -65,31 +65,46 @@ class InvoicesController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(invoices $invoices)
+    public function edit($id)
     {
-        //
+        $invoices = invoices::where('id', $id)->first();
+        $sections = sections::all();
+        return view('invoices.edit_invoice',compact('invoices','sections'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, invoices $invoices)
+    public function update(Request $request)
     {
-        //
+        $id = $request->invoice_id;
+        $invoiceAttributes = $this->validateInvoice($request);
+        invoices::where('id', $id)->update($invoiceAttributes);
+        $invoicesDetailsController = new InvoicesDetailsController();
+        $invoicesDetailsController->updateInvoiceDetails($id, $request);
+        $invoiceAttachmentController = new InvoiceAttachmentsController();
+        $invoiceAttachmentController->update($request, $id);
+        return redirect()->back()->with(['Update' => 'تم تعديل الفاتورة بنجاح']);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(invoices $invoices)
+    public function destroy(Request $request)
     {
-        //
+        $id = $request->invoice_id;
+        $invoice = invoices::where('id', $id)->first();
+        $invoice->Delete();
+        session()->flash('delete_invoice');
+        return redirect('/invoices');
+
+
     }
+
+
     public function getProducts($id)
     {
         $products=DB::table('products')->where('section_id',$id)->pluck('product_name','id');
         return json_encode($products);
     }
+
     protected function validateInvoice(Request $request)
     {
         return $request->validate([

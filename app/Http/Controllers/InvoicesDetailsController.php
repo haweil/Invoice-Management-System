@@ -80,7 +80,19 @@ class InvoicesDetailsController extends Controller
             'user' => auth()->user()->name,
         ]);
     }
+    public function updateInvoiceDetails($invoice_id, Request $request)
+    {
 
+        invoices_details::where('invoice_id', $invoice_id)->update([
+            'invoice_number' => $request->invoice_number,
+            'product' => $request->product,
+            'Section' => $request->section_id,
+            'Status' => 'غير مدفوعة',
+            'Value_Status' => 2,
+            'note' => $request->note,
+            'user' => auth()->user()->name,
+        ]);
+    }
     public function Open_file($invoices_number , $file_name)
     {
         $path = "Attachments/$invoices_number/$file_name";
