@@ -6,11 +6,13 @@ use App\Models\User;
 use App\Models\invoices;
 use App\Models\sections;
 use Illuminate\Http\Request;
+use App\Exports\InvoicesExport;
 use App\Models\invoices_details;
 use App\Notifications\AddInvoice;
 use Illuminate\Support\Facades\DB;
 use App\Models\invoice_attachments;
 use Illuminate\Support\Facades\Auth;
+use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Notification;
 use App\Http\Controllers\InvoicesDetailsController;
@@ -222,5 +224,9 @@ class InvoicesController extends Controller
     {
         $invoices = invoices::where('id', $id)->first();
         return view('invoices.Print_invoice',compact('invoices'));
+    }
+    public function export()
+    {
+        return Excel::download(new InvoicesExport, 'invoices.xlsx');
     }
 }

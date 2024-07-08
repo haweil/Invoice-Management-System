@@ -40,4 +40,5 @@ Route::get('View_file/{invoice_number}/{file_name}', [InvoicesDetailsController:
 Route::post('Delete_file', [InvoicesDetailsController::class, 'Delete_file'])->name('Delete_file');
 Route::post('InvoiceAttachments', [InvoiceAttachmentsController::class,'store'])->name('InvoiceAttachments');
 Route::get('Print_invoice/{id}', [InvoicesController::class, 'Print_invoice'])->name('Print_invoice');
+Route::get('invoices_export', [InvoicesController::class, 'export'])->name('invoices_export');
 Route::get('/{page}', [AdminController::class, 'index']);
