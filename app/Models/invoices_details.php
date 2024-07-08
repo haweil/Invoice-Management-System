@@ -17,6 +17,7 @@ class invoices_details extends Model
         'Status',
         'Value_Status',
         'note',
+        'Payment_Date',
         'user',
 
     ];

@@ -123,4 +123,5 @@ class InvoicesDetailsController extends Controller
         Storage::disk('public_uploads')->delete( $invoices_number . '/' . $file_name);
         return redirect()->back()->with(['Success' => 'تم حذف المرفق بنجاح']);
     }
+
 }

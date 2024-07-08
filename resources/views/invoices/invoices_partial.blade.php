@@ -1,6 +1,6 @@
 @extends('layouts.master')
 @section('title')
-    قائمة الفواتير
+    الفواتير المدفوعه جزئياً
 @stop
 @section('css')
     <!-- Internal Data table css -->
@@ -18,8 +18,8 @@
     <div class="breadcrumb-header justify-content-between">
         <div class="my-auto">
             <div class="d-flex">
-                <h4 class="content-title mb-0 my-auto">الفواتير</h4><span class="text-muted mt-1 tx-13 mr-2 mb-0">/ قائمة
-                    الفواتير</span>
+                <h4 class="content-title mb-0 my-auto">الفواتير</h4><span class="text-muted mt-1 tx-13 mr-2 mb-0">/ الفواتير
+                    المدفوعه جزئياً</span>
             </div>
         </div>
     </div>
@@ -41,17 +41,6 @@
             window.onload = function() {
                 notif({
                     msg: "تم تحديث حالة الدفع بنجاح",
-                    type: "success"
-                })
-            }
-        </script>
-    @endif
-
-    @if (session()->has('restore_invoice'))
-        <script>
-            window.onload = function() {
-                notif({
-                    msg: "تم استعادة الفاتورة بنجاح",
                     type: "success"
                 })
             }
@@ -145,11 +134,6 @@
                                                         data-target="#Transfer_invoice"><i
                                                             class="text-warning fas fa-exchange-alt"></i>&nbsp;&nbsp;نقل الي
                                                         الارشيف</a>
-
-                                                    <a class="dropdown-item" href="Print_invoice/{{ $invoice->id }}"><i
-                                                            class="text-success fas fa-print"></i>&nbsp;&nbsp;طباعة
-                                                        الفاتورة
-                                                    </a>
                                                 </div>
                                             </div>
                                         </td>
@@ -256,6 +240,7 @@
             modal.find('.modal-body #invoice_id').val(invoice_id);
         })
     </script>
+
     <script>
         $('#Transfer_invoice').on('show.bs.modal', function(event) {
             var button = $(event.relatedTarget)
