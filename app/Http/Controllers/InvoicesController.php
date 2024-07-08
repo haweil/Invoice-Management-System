@@ -2,14 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Models\invoices;
 use App\Models\sections;
 use Illuminate\Http\Request;
 use App\Models\invoices_details;
+use App\Notifications\AddInvoice;
 use Illuminate\Support\Facades\DB;
 use App\Models\invoice_attachments;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Notification;
 use App\Http\Controllers\InvoicesDetailsController;
 use App\Http\Controllers\InvoiceAttachmentsController;
 
@@ -43,7 +46,7 @@ class InvoicesController extends Controller
         $invoiceAttributes = $this->validateInvoice($request);
 
         $invoice = $this->createInvoice($invoiceAttributes);
-
+        $invoice_id=invoices::latest()->first()->id;
         $invoicesDetailsController = new InvoicesDetailsController();
         $invoicesDetailsController->createInvoiceDetails($invoice->id, $request);
 
@@ -53,6 +56,10 @@ class InvoicesController extends Controller
             $invoiceAttachmentController = new InvoiceAttachmentsController();
             $invoiceAttachmentController->handleFileUpload($request, $invoice);
         }
+
+        $user = User::find(1); // Ensure this user exists in your database
+        Notification::send($user, new AddInvoice($invoice_id));
+
         return redirect()->back()->with(['Add' => 'تم اضافة الفاتورة بنجاح ']);
     }
 

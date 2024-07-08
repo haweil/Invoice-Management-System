@@ -38,6 +38,7 @@ class InvoicesDetailsController extends Controller
      */
     public function show($id)
     {
+        $invoices = invoices::findOrFail($id);
         $invoices = invoices::where('id',$id)->first();
         $details = invoices_details::where('invoice_id',$id)->get();
         $attachments = invoice_attachments::where('invoice_id',$id)->get();
