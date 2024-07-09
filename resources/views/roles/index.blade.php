@@ -84,11 +84,26 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($roles as $key => $role)
+                            @foreach ($roles as $role)
                                 <tr>
                                     <td>{{ ++$i }}</td>
                                     <td>{{ $role->name }}</td>
                                     <td>
+                                        <a class="btn btn-success btn-sm"
+                                            href="{{ route('roles.show', $role->id) }}">عرض</a>
+
+                                        <a class="btn btn-primary btn-sm"
+                                            href="{{ route('roles.edit', $role->id) }}">تعديل</a>
+
+                                        @if ($role->name !== 'owner')
+                                            <form method="POST" action="{{ route('roles.destroy', $role->id) }}"
+                                                style="display:inline">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-danger btn-sm">حذف</button>
+                                            </form>
+                                        @endif
+
                                     </td>
                                 </tr>
                             @endforeach

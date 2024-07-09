@@ -47,14 +47,14 @@ public function create()
 
 public function store(Request $request)
     {
-        $this->validate($request, [
+        $attributeRoles = $request->validate([
         'name' => 'required|unique:roles,name',
         'permission' => 'required',
         ]);
         $role = Role::create(['name' => $request->input('name')]);
         $role->syncPermissions($request->input('permission'));
         return redirect()->route('roles.index')
-        ->with('success','Role created successfully');
+        ->with('Add','Role created successfully');
     }
 
 public function show($id)
@@ -78,22 +78,22 @@ public function edit($id)
 
 public function update(Request $request, $id)
     {
-        $this->validate($request, [
-        'name' => 'required',
-        'permission' => 'required',
+        $attributeRoles = $request->validate([
+            'name' => 'required',
+            'permission' => 'required',
         ]);
         $role = Role::find($id);
         $role->name = $request->input('name');
         $role->save();
         $role->syncPermissions($request->input('permission'));
         return redirect()->route('roles.index')
-        ->with('success','Role updated successfully');
+        ->with('edit','Role updated successfully');
     }
 
 public function destroy($id)
     {
         DB::table("roles")->where('id',$id)->delete();
         return redirect()->route('roles.index')
-        ->with('success','Role deleted successfully');
+        ->with('delete','Role deleted successfully');
     }
 }

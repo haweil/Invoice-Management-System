@@ -21,9 +21,30 @@ class UserController extends Controller
         $roles = Role::pluck('name','name')->all();
         return view('users.Add_user',compact('roles'));
     }
-    public function store()
+    public function store(Request $request)
     {
+         $attributeUsers = $request->validate([
+           'name' => 'required',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|same:confirm-password',
+            'roles_name' => 'required',
+            'status' => 'required',
+         ],[
+                'roles_name.required' => 'من فضلك اختر الصلاحيات للمستخدم',
+                'status.required' => 'من فضلك اختر الحالة للمستخدم',
+                'email.unique' => 'هذا البريد الالكتروني مسجل مسبقا',
+                'name.required' => 'من فضلك ادخل الاسم',
+                'email.required' => 'من فضلك ادخل البريد الالكتروني',
+                'password.required' => 'من فضلك ادخل كلمة المرور',
+                'password.same' => 'كلمة المرور غير متطابقة',
+        ]);
 
+         $attributeUsers['password'] = bcrypt($attributeUsers['password']);
+         $user = User::create($attributeUsers);
+        $user->assignRole($request->input('roles_name'));
+
+        return redirect()->route('users.index')
+            ->with('success', 'User created successfully');
     }
     public function show($id)
     {

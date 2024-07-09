@@ -41,6 +41,7 @@
             </div>
         @endif
 
+
         <div class="card">
             <div class="card-body">
                 <div class="col-lg-12 margin-tb">
@@ -89,7 +90,7 @@
                     <div class="row row-sm mg-b-20">
                         <div class="col-lg-6">
                             <label class="form-label">حالة المستخدم</label>
-                            <select name="Status" id="select-beast" class="form-control  nice-select  custom-select">
+                            <select name="status" id="select-beast" class="form-control  nice-select  custom-select">
                                 <option value="مفعل">مفعل</option>
                                 <option value="غير مفعل">غير مفعل</option>
                             </select>
@@ -99,8 +100,12 @@
                     <div class="row mg-b-20">
                         <div class="col-xs-12 col-md-12">
                             <div class="form-group">
-                                <label class="form-label"> صلاحية المستخدم</label>
-                                {!! Form::select('roles_name[]', $roles, [], ['class' => 'form-control', 'multiple']) !!}
+                                <label for="roles_name[]" class="form-label">صلاحية المستخدم</label>
+                                <select name="roles_name[]" id="roles_name[]" class="form-control" multiple>
+                                    @foreach ($roles as $value)
+                                        <option value="{{ $value }}">{{ $value }}</option>
+                                    @endforeach
+                                </select>
                             </div>
                         </div>
                     </div>
