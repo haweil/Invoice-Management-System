@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\RoleController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\InvoicesController;
@@ -41,4 +43,12 @@ Route::post('Delete_file', [InvoicesDetailsController::class, 'Delete_file'])->n
 Route::post('InvoiceAttachments', [InvoiceAttachmentsController::class,'store'])->name('InvoiceAttachments');
 Route::get('Print_invoice/{id}', [InvoicesController::class, 'Print_invoice'])->name('Print_invoice');
 Route::get('invoices_export', [InvoicesController::class, 'export'])->name('invoices_export');
+
+ Route::group(['middleware' => ['auth']], function() {
+
+    Route::resource('roles',RoleController::class);
+
+    Route::resource('users',UserController::class);
+});
+
 Route::get('/{page}', [AdminController::class, 'index']);
