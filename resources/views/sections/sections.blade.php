@@ -76,8 +76,10 @@
                 <div class="card-header pb-0">
                     <div class="d-flex justify-content-between">
                         <div class="col-sm-6 col-md-4 col-xl-3">
-                            <a class="modal-effect btn btn-outline-primary btn-block" data-effect="effect-slide-in-right"
-                                data-toggle="modal" href="#modaldemo1">اضافة قسم</a>
+                            @can('اضافة قسم')
+                                <a class="modal-effect btn btn-outline-primary btn-block" data-effect="effect-slide-in-right"
+                                    data-toggle="modal" href="#modaldemo1">اضافة قسم</a>
+                            @endcan
 
                         </div>
                     </div>
@@ -102,15 +104,19 @@
                                         <td>{{ $section->section_name }}</td>
                                         <td>{{ $section->description }}</td>
                                         <td>
-                                            <button class="btn btn-outline-success btn-sm"
-                                                data-section_name="{{ $section->section_name }}"
-                                                data-id="{{ $section->id }}"
-                                                data-description="{{ $section->description }}" data-toggle="modal"
-                                                data-target="#exampleModal2">تعديل</button>
+                                            @can('تعديل قسم')
+                                                <button class="btn btn-outline-success btn-sm"
+                                                    data-section_name="{{ $section->section_name }}"
+                                                    data-id="{{ $section->id }}"
+                                                    data-description="{{ $section->description }}" data-toggle="modal"
+                                                    data-target="#exampleModal2">تعديل</button>
+                                            @endcan
 
-                                            <button class="btn btn-outline-danger btn-sm " data-id="{{ $section->id }}"
-                                                data-section_name="{{ $section->section_name }}" data-toggle="modal"
-                                                data-target="#modaldemo9">حذف</button>
+                                            @can('حذف قسم')
+                                                <button class="btn btn-outline-danger btn-sm " data-id="{{ $section->id }}"
+                                                    data-section_name="{{ $section->section_name }}" data-toggle="modal"
+                                                    data-target="#modaldemo9">حذف</button>
+                                            @endcan
                                         </td>
                                         </td>
                                     </tr>

@@ -7,10 +7,19 @@ use Illuminate\Http\Request;
 use App\Models\invoices_details;
 use App\Models\invoice_attachments;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Routing\Controllers\Middleware;
+use Illuminate\Routing\Controllers\HasMiddleware;
 
-class InvoicesDetailsController extends Controller
+class InvoicesDetailsController extends Controller implements HasMiddleware
 {
 
+    public static function middleware(): array
+     {
+         return [
+             new Middleware(middleware: 'permission:قائمة الفواتير', only: ['show']),
+
+         ];
+    }
 
     public function index()
     {

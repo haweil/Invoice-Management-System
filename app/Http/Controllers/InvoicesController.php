@@ -15,14 +15,35 @@ use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Notification;
+use Illuminate\Routing\Controllers\Middleware;
+use Illuminate\Routing\Controllers\HasMiddleware;
 use App\Http\Controllers\InvoicesDetailsController;
 use App\Http\Controllers\InvoiceAttachmentsController;
 
-class InvoicesController extends Controller
+class InvoicesController extends Controller implements HasMiddleware
 {
     /**
      * Display a listing of the resource.
      */
+public function __construct()
+{
+}
+public static function middleware(): array
+     {
+         return [
+            new Middleware(middleware: 'permission:قائمة الفواتير', only: ['index']),
+             new Middleware(middleware: 'permission:اضافة فاتورة', only: ['store', 'create']),
+             new Middleware(middleware: 'permission:حذف الفاتورة', only: ['destroy']),
+             new Middleware(middleware: 'permission:تصدير EXCEL', only: ['export']),
+             new Middleware(middleware: 'permission:تغير حالة الدفع', only: ['Status_Update','Status_show']),
+             new Middleware(middleware: 'permission:تعديل الفاتورة', only: ['update', 'edit']),
+             new Middleware(middleware: 'permission:طباعةالفاتورة', only: ['Print_invoice']),
+             new Middleware(middleware: 'permission:حذف المرفق', only: ['deleteAttachment']),
+             new Middleware(middleware: 'permission:الفواتير المدفوعة', only: ['invoices_paid']),
+             new Middleware(middleware: 'permission:الفواتير الغير مدفوعة', only: ['invoices_unpaid']),
+             new Middleware(middleware: 'permission:الفواتير المدفوعة جزئيا', only: ['invoices_partial']),
+         ];
+    }
     public function index()
     {
         $section=sections::with('invoices')->get();

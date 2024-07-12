@@ -7,9 +7,20 @@ use Illuminate\Http\Request;
 use App\Models\invoice_attachments;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Routing\Controllers\Middleware;
+use Illuminate\Routing\Controllers\HasMiddleware;
 
-class InvoiceAttachmentsController extends Controller
+
+class InvoiceAttachmentsController extends Controller implements HasMiddleware
 {
+
+    public static function middleware(): array
+    {
+        return [
+            new Middleware(middleware: 'permission:اضافة مرفق', only: ['store']),
+            new Middleware(middleware: 'permission:تعديل مرفق', only: ['update']),
+        ];
+    }
     public function index()
     {
 

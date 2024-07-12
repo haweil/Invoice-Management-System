@@ -6,12 +6,24 @@ use App\Models\products;
 use App\Models\sections;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 
-class ProductsController extends Controller
+
+class ProductsController extends Controller implements HasMiddleware
 {
     /**
      * Display a listing of the resource.
      */
+    public static function middleware(): array
+    {
+        return [
+            new Middleware(middleware: 'permission:اضافة منتج', only: ['store', 'create']),
+            new Middleware(middleware: 'permission:تعديل منتج', only: ['update', 'edit']),
+            new Middleware(middleware: 'permission:حذف منتج', only: ['destroy']),
+            new Middleware(middleware: 'permission:عرض منتج', only: ['index']),
+        ];
+    }
     public function index()
     {
         $sections =sections::with('products')->get();

@@ -22,15 +22,15 @@ function __construct()
 
 }
 
- public static function middleware(): array
-{
-    return [
-        new Middleware('permission:role-list|role-create|role-edit|role-delete ', ['only' => ['index','create','store','edit','update']]),
-        new Middleware('permission:role-create', ['only' => ['create','store']]),
-        new Middleware('permission:role-edit', ['only' => ['edit','update']]),
-        new Middleware('permission:role-delete', ['only' => ['destroy']]),
-    ];
-}
+public static function middleware(): array
+    {
+        return [
+            new Middleware(middleware: 'permission:حذف صلاحية',only: ['destroy']),
+            new Middleware(middleware: 'permission:تعديل صلاحية',only: ['update','edit']),
+            new Middleware(middleware: 'permission:اضافة صلاحية',only: ['store','create']),
+            new Middleware(middleware: 'permission:عرض صلاحية',only: ['index']),
+        ];
+    }
 
 public function index(Request $request)
 {

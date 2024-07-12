@@ -3,7 +3,7 @@
     <!--Internal   Notify -->
     <link href="{{ URL::asset('assets/plugins/notify/css/notifIt.css') }}" rel="stylesheet" />
 @section('title')
-    صلاحيات المستخدمين - مورا سوفت للادارة القانونية
+    صلاحيات المستخدمين
 @stop
 
 
@@ -89,19 +89,25 @@
                                     <td>{{ ++$i }}</td>
                                     <td>{{ $role->name }}</td>
                                     <td>
-                                        <a class="btn btn-success btn-sm"
-                                            href="{{ route('roles.show', $role->id) }}">عرض</a>
+                                        @can('عرض صلاحية')
+                                            <a class="btn btn-success btn-sm"
+                                                href="{{ route('roles.show', $role->id) }}">عرض</a>
+                                        @endcan
 
-                                        <a class="btn btn-primary btn-sm"
-                                            href="{{ route('roles.edit', $role->id) }}">تعديل</a>
+                                        @can('تعديل صلاحية')
+                                            <a class="btn btn-primary btn-sm"
+                                                href="{{ route('roles.edit', $role->id) }}">تعديل</a>
+                                        @endcan
 
                                         @if ($role->name !== 'owner')
-                                            <form method="POST" action="{{ route('roles.destroy', $role->id) }}"
-                                                style="display:inline">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="btn btn-danger btn-sm">حذف</button>
-                                            </form>
+                                            @can('حذف صلاحية')
+                                                <form method="POST" action="{{ route('roles.destroy', $role->id) }}"
+                                                    style="display:inline">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-danger btn-sm">حذف</button>
+                                                </form>
+                                            @endcan
                                         @endif
 
                                     </td>

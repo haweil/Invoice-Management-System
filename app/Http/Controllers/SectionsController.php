@@ -5,12 +5,24 @@ namespace App\Http\Controllers;
 use App\Models\sections;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Routing\Controllers\Middleware;
+use Illuminate\Routing\Controllers\HasMiddleware;
 
-class SectionsController extends Controller
+class SectionsController extends Controller implements HasMiddleware
 {
     /**
      * Display a listing of the resource.
      */
+
+     public static function middleware(): array
+     {
+         return [
+             new Middleware(middleware: 'permission:اضافة قسم', only: ['store', 'create']),
+             new Middleware(middleware: 'permission:تعديل قسم', only: ['update', 'edit']),
+             new Middleware(middleware: 'permission:حذف قسم', only: ['destroy']),
+             new Middleware(middleware: 'permission:عرض قسم', only: ['index']),
+         ];
+     }
     public function index()
     {
         $sections=sections::all();

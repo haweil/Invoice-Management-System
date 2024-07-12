@@ -31,10 +31,37 @@
 
 @section('content')
 
-@if (session('success'))
-    <div class="alert alert-success">
-        {{ session('success') }}
-    </div>
+@if (session()->has('Add'))
+    <script>
+        window.onload = function() {
+            notif({
+                msg: " تم اضافة المستخدم بنجاح",
+                type: "success"
+            });
+        }
+    </script>
+@endif
+
+@if (session()->has('edit'))
+    <script>
+        window.onload = function() {
+            notif({
+                msg: " تم تحديث بيانات المستخدم بنجاح",
+                type: "success"
+            });
+        }
+    </script>
+@endif
+
+@if (session()->has('delete'))
+    <script>
+        window.onload = function() {
+            notif({
+                msg: " تم حذف المستخدم بنجاح",
+                type: "error"
+            });
+        }
+    </script>
 @endif
 
 <!-- row opened -->
@@ -88,13 +115,19 @@
                                     </td>
 
                                     <td>
-                                        <a href="{{ route('users.edit', $user->id) }}" class="btn btn-sm btn-info"
-                                            title="تعديل"><i class="las la-pen"></i></a>
+                                        <a class="btn btn-success btn-sm"
+                                            href="{{ route('users.show', $user->id) }}">عرض</a>
 
-                                        <a class="modal-effect btn btn-sm btn-danger" data-effect="effect-scale"
-                                            data-user_id="{{ $user->id }}" data-username="{{ $user->name }}"
-                                            data-toggle="modal" href="#modaldemo8" title="حذف"><i
-                                                class="las la-trash"></i></a>
+                                        @can('تعديل مستخدم')
+                                            <a href="{{ route('users.edit', $user->id) }}" class="btn btn-sm btn-info"
+                                                title="تعديل"><i class="las la-pen"></i></a>
+                                        @endcan
+                                        @can('حذف مستخدم')
+                                            <a class="modal-effect btn btn-sm btn-danger" data-effect="effect-scale"
+                                                data-user_id="{{ $user->id }}" data-username="{{ $user->name }}"
+                                                data-toggle="modal" href="#modaldemo8" title="حذف"><i
+                                                    class="las la-trash"></i></a>
+                                        @endcan
                                     </td>
                                 </tr>
                             @endforeach
@@ -115,8 +148,8 @@
                         data-dismiss="modal" type="button"><span aria-hidden="true">&times;</span></button>
                 </div>
                 <form action="{{ route('users.destroy', 'test') }}" method="post">
-                    {{ method_field('delete') }}
-                    {{ csrf_field() }}
+                    @csrf
+                    @method('DELETE')
                     <div class="modal-body">
                         <p>هل انت متاكد من عملية الحذف ؟</p><br>
                         <input type="hidden" name="user_id" id="user_id" value="">

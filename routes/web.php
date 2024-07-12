@@ -1,9 +1,12 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\Invoices_Report;
+use App\Http\Controllers\Customers_Report;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\InvoicesController;
 use App\Http\Controllers\ProductsController;
@@ -17,9 +20,7 @@ Route::get('/', function () {
     return view('auth.login');
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', [HomeController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -43,6 +44,10 @@ Route::post('Delete_file', [InvoicesDetailsController::class, 'Delete_file'])->n
 Route::post('InvoiceAttachments', [InvoiceAttachmentsController::class,'store'])->name('InvoiceAttachments');
 Route::get('Print_invoice/{id}', [InvoicesController::class, 'Print_invoice'])->name('Print_invoice');
 Route::get('invoices_export', [InvoicesController::class, 'export'])->name('invoices_export');
+Route::get('invoices_report', [Invoices_Report::class, 'index'])->name('invoices_report');
+Route::post('Search_invoices', [Invoices_Report::class, 'Search_invoices'])->name('Search_invoices');
+Route::get('customers_report', [Customers_Report::class, 'index'])->name('customers_report');
+Route::post('Search_customers', [Customers_Report::class, 'Search_customers'])->name('Search_customers');
 
  Route::group(['middleware' => ['auth']], function() {
 
@@ -50,5 +55,6 @@ Route::get('invoices_export', [InvoicesController::class, 'export'])->name('invo
 
     Route::resource('users',UserController::class);
 });
+
 
 Route::get('/{page}', [AdminController::class, 'index']);
