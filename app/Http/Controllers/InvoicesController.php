@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Exports\InvoicesExport;
 use App\Models\invoices_details;
 use App\Notifications\AddInvoice;
+use App\Notifications\Add_invoice_new;
 use Illuminate\Support\Facades\DB;
 use App\Models\invoice_attachments;
 use Illuminate\Support\Facades\Auth;
@@ -80,8 +81,13 @@ public static function middleware(): array
             $invoiceAttachmentController->handleFileUpload($request, $invoice);
         }
 
-        $user = User::find(1); // Ensure this user exists in your database
-        Notification::send($user, new AddInvoice($invoice_id));
+        //send Email
+        //$user = User::find(1); // Ensure this user exists in your database
+        //Notification::send($user, new AddInvoice($invoice_id));
+
+        $users = User::where('id', '!=', Auth::user()->id)->get();
+        $invoices=invoices::latest()->first();
+        Notification::send($users,new Add_invoice_new($invoices));
 
         return redirect()->back()->with(['Add' => 'تم اضافة الفاتورة بنجاح ']);
     }
@@ -134,6 +140,7 @@ public static function middleware(): array
         }
         }
         $invoice->forcedelete();
+        DB::table('notifications')->where('data->id', $id)->delete();
         session()->flash('delete_invoice');
         return redirect('/invoices');
         }
@@ -249,5 +256,30 @@ public static function middleware(): array
     public function export()
     {
         return Excel::download(new InvoicesExport, 'invoices.xlsx');
+    }
+    public function MarkAsRead_all(Request $request)
+    {
+        $userUnreadNotification = auth()->user()->unreadNotifications;
+        if ($userUnreadNotification) {
+            $userUnreadNotification->markAsRead();
+            return back();
+        }
+    }
+
+        public function MarkAsRead($id)
+    {
+        $notification = auth()->user()->notifications()->where('id', $id)->first();
+
+        if ($notification) {
+            $notification->markAsRead();
+            $invoiceId = $notification->data['id'];
+            return redirect()->route('InvoicesDetails', $invoiceId);
+        }
+
+        return redirect()->back();
+    }
+    public function notifications_unread () {
+
+        return auth()->user()->unreadNotifications;
     }
 }

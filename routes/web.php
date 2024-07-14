@@ -55,6 +55,7 @@ Route::post('Search_customers', [Customers_Report::class, 'Search_customers'])->
 
     Route::resource('users',UserController::class);
 });
-
+Route::get('MarkAsRead_all',[InvoicesController::class,'MarkAsRead_all'])->name('MarkAsRead_all');
+Route::get('MarkAsRead/{id}',[InvoicesController::class,'MarkAsRead'])->name('MarkAsRead');
 
 Route::get('/{page}', [AdminController::class, 'index']);
